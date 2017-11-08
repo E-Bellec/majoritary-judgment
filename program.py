@@ -73,7 +73,7 @@ def majoritary_mentions_hash(candidates_results):
         cumulated_votes = 0
 
         # we loop on the result of the current candidate
-        for mention, vote_count in enumerate(candidate_result):
+        for mention, vote_count in enumerate(candidate_result): # enumerate : loop over something and have an automatic counter
             cumulated_votes += vote_count
 
             # if the votes exceeds the median
@@ -87,6 +87,28 @@ def majoritary_mentions_hash(candidates_results):
                 break
     return resultMajoritaryMention
 
+# Funtion Sort the candidates by mention (tri à bulle)
+# Retun array
+def sort_candidates_by_mentions(mentions):
+    unsorted = [(key, (mention["mention"], mention["score"])) for key, mention in mentions.items()]
+    swapped = True
+
+    while swapped:
+        swapped = False
+        for j in range(0, len(unsorted) - 1):
+            if unsorted[j + 1][1] > unsorted[j][1]:
+                unsorted[j+1], unsorted[j] = unsorted[j], unsorted[j+1]
+                swapped = True
+    
+    return [
+        {
+            "name": candidate[0],
+            "mention": candidate[1][0],
+            "score": candidate[1][1],
+        }
+        for candidate in unsorted
+    ]
+
 ##################################################
 #################### MAIN FUNCTION ###############
 ##################################################
@@ -98,6 +120,8 @@ def main():
     results = results_hash(votes)
     # get the majoritatry mention of the candidats
     majoritary_mentions = majoritary_mentions_hash(results)
+    # Sort the candidates by mention
+    sorted_candidates = sort_candidates_by_mentions(majoritary_mentions)
 
 if __name__ == '__main__':
     main()
