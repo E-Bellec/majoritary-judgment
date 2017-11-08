@@ -96,7 +96,11 @@ def sort_candidates_by_mentions(mentions):
     while swapped:
         swapped = False
         for j in range(0, len(unsorted) - 1):
+
+            #for each loop turn we compare the current item and the next
             if unsorted[j + 1][1] > unsorted[j][1]:
+
+                # we reverse the index of items
                 unsorted[j+1], unsorted[j] = unsorted[j], unsorted[j+1]
                 swapped = True
     
@@ -108,6 +112,21 @@ def sort_candidates_by_mentions(mentions):
         }
         for candidate in unsorted
     ]
+
+# Function display the result by candidats
+def print_results(results):
+    for i, result in enumerate(results):
+        name = CANDIDATES[result["name"]]
+        mention = MENTIONS[result["mention"]]
+        score = result["score"] * 100. / VOTES
+
+        # For the winner
+        if i == 0:
+            print( "Gagnant: {} avec {:.2f}% de mentions {}".format(name, score, mention ) )
+            continue
+        else:
+            # For other candidats
+            print( "- {} avec {:.2f}% de mentions {}".format(name, score, mention) )
 
 ##################################################
 #################### MAIN FUNCTION ###############
@@ -122,6 +141,8 @@ def main():
     majoritary_mentions = majoritary_mentions_hash(results)
     # Sort the candidates by mention
     sorted_candidates = sort_candidates_by_mentions(majoritary_mentions)
+    # Display the result of the vote
+    print_results(sorted_candidates)
 
 if __name__ == '__main__':
     main()
