@@ -11,9 +11,9 @@ random.seed(0)
 #################### VOTES SETUP #################
 ##################################################
 
-VOTES = 100000
-MEDIAN = VOTES/2
-CANDIDATES = {
+CONST_VOTES = 100000
+CONST_MEDIAN = CONST_VOTES/2
+CONST_CANDIDATES = {
     "hermione": "Hermione Granger",
     "balou": "Balou",
     "chuck-norris": "Chuck Norris",
@@ -22,7 +22,7 @@ CANDIDATES = {
     "beyonce": "Beyoncé"
 }
 
-MENTIONS = [
+CONST_MENTIONS = [
     "A rejeter",
     "Insuffisant",
     "Passable",
@@ -41,22 +41,63 @@ def create_votes():
             "elsa": random.randint(1, 2),
             "gandalf": random.randint(3, 6),
             "beyonce": random.randint(2, 6)
-        } for _ in range(0, VOTES)
+        } for _ in range(0, CONST_VOTES)
     ]
 
 ##################################################
 #################### FUNCTIONS ###################
 ##################################################
 
-# Your code goes here
+# Function that takes as input a list of votes.
+# Returns a dictionary containing the result of the candidates
+def results_hash(listOfVotes):
+    candidates_results = {
+        # Initialization of a table that will contain the results of votes by mention
+        candidate: [0] * len(CONST_MENTIONS)
+        for candidate in CONST_CANDIDATES.keys()
+    }
+    # We go through each vote and add 1 when a candidate receives a mention
+    for vote in listOfVotes:
+        for candidate, mention in vote.items():
+            candidates_results[candidate][mention] += 1
+    return candidates_results
 
+# Function Calculate the median grade of each candidate
+# Return median mention of the candidates 
+def majoritary_mentions_hash(candidates_results):
+    # initialisation of result
+    resultMajoritaryMention = {}
+
+    # loop on the candidate
+    for candidate, candidate_result in candidates_results.items():
+        cumulated_votes = 0
+
+        # we loop on the result of the current candidate
+        for mention, vote_count in enumerate(candidate_result):
+            cumulated_votes += vote_count
+
+            # if the votes exceeds the median
+            if CONST_MEDIAN < cumulated_votes:
+                
+                # add a key in a dictionary
+                resultMajoritaryMention[candidate] = {
+                    "mention": mention,
+                    "score": cumulated_votes
+                }
+                break
+    return resultMajoritaryMention
 
 ##################################################
 #################### MAIN FUNCTION ###############
 ##################################################
 
 def main():
+    # Creat votes
     votes = create_votes()
+    # get a dictionary containing the vote result of the candidates
+    results = results_hash(votes)
+    # get the majoritatry mention of the candidats
+    majoritary_mentions = majoritary_mentions_hash(results)
 
 if __name__ == '__main__':
     main()
