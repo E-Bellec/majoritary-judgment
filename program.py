@@ -116,9 +116,9 @@ def sort_candidates_by_mentions(mentions):
 # Function display the result by candidats
 def print_results(results):
     for i, result in enumerate(results):
-        name = CANDIDATES[result["name"]]
-        mention = MENTIONS[result["mention"]]
-        score = result["score"] * 100. / VOTES
+        name = CONST_CANDIDATES[result["name"]]
+        mention = CONST_MENTIONS[result["mention"]]
+        score = result["score"] * 100. / CONST_VOTES
 
         # For the winner
         if i == 0:
